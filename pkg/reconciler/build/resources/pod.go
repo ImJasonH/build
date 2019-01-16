@@ -104,9 +104,6 @@ var (
 		"The container image run at the end of the build to log build success")
 	gcsFetcherImage = flag.String("gcs-fetcher-image", "gcr.io/cloud-builders/gcs-fetcher:latest",
 		"The container image containing our GCS fetcher binary.")
-
-	emptyDirVolumeMedium = flag.String("empty-dir-volume-medium", "",
-		"emptyDir.medium for implicit volumes")
 )
 
 // TODO(mattmoor): Should we move this somewhere common, because of the flag?
