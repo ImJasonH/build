@@ -28,17 +28,17 @@ import (
 	"path/filepath"
 	"strconv"
 
-	corev1 "k8s.io/api/core/v1"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/runtime/schema"
-	"k8s.io/client-go/kubernetes"
-
 	v1alpha1 "github.com/knative/build/pkg/apis/build/v1alpha1"
 	"github.com/knative/build/pkg/credentials"
 	"github.com/knative/build/pkg/credentials/dockercreds"
 	"github.com/knative/build/pkg/credentials/gitcreds"
 	"github.com/knative/pkg/apis"
 	duckv1alpha1 "github.com/knative/pkg/apis/duck/v1alpha1"
+	corev1 "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/api/resource"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/runtime/schema"
+	"k8s.io/client-go/kubernetes"
 )
 
 const workspaceDir = "/workspace"
@@ -46,7 +46,10 @@ const workspaceDir = "/workspace"
 // These are effectively const, but Go doesn't have such an annotation.
 var (
 	emptyVolumeSource = corev1.VolumeSource{
-		EmptyDir: &corev1.EmptyDirVolumeSource{},
+		EmptyDir: &corev1.EmptyDirVolumeSource{
+			Medium:    corev1.StorageMediumMemory,
+			SizeLimit: &resource.Quantity{Format: "10Gi"},
+		},
 	}
 	// These are injected into all of the source/step containers.
 	implicitEnvVars = []corev1.EnvVar{{
@@ -101,6 +104,9 @@ var (
 		"The container image run at the end of the build to log build success")
 	gcsFetcherImage = flag.String("gcs-fetcher-image", "gcr.io/cloud-builders/gcs-fetcher:latest",
 		"The container image containing our GCS fetcher binary.")
+
+	emptyDirVolumeMedium = flag.String("empty-dir-volume-medium", "",
+		"emptyDir.medium for implicit volumes")
 )
 
 // TODO(mattmoor): Should we move this somewhere common, because of the flag?
