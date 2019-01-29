@@ -1,5 +1,5 @@
 /*
-Copyright 2017 The Knative Authors.
+Copyright 2019 The Knative Authors.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -42,10 +42,4 @@ func main() {
 	}.Go()
 }
 
-// TODO(jasonhall): Tests
-// (add Runner interface)
-// - original exit code is propagated (needs e2e?)
-// - no entrypoint, with args (take first arg
-// - no entrypoint, no args (no-op)
-// - entrypoint, no args
-// - entrypoint with args
+// TODO(jasonhall): Test that original exit code is propagated and that stdout/stderr are collected -- needs e2e tests.
